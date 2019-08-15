@@ -4,7 +4,10 @@ using namespace std;
 
 string InputFileName,OutputFileName;
 
-ll Memory_limit;
+ll Memory_Limit;
+
+int first1, last1, first2, last2;
+
 void read_data()
 {
     cout<<"Input File Name "<<endl;
@@ -17,67 +20,96 @@ void read_data()
 
     cout<<"Memory limit "<<endl;
 
-    cin>> Memory_limit ;
+    cin>> Memory_Limit ;
 }
+// compare two word
 bool compare(string word1 , string word2)
 {
-    // flase-> word1<word2
-    // true word1>word2
-     // library support compare two string with lexicographical compare
-    return lexicographical_compare(word1,word2);
+    first1 = 0 ; first2 = 0 ;
+    last1 = word1.size();
+    last2 = word2.size();
+    while (first1!=last1)
+    {
+        if (first2 == last2 || word1[first1] > word2[first2]) return false;
+        else if (word1[first1] < word2[first2]) return true;
+        ++first1 ;
+        ++first2 ;
+    }
+    return (first2!=last2);
 }
 void merge_data_into_result_file(vector<string> small_data , string OutputFileName)
 {
-    fstream data,merge_result;
+    string word;
+    fstream data_,merge_result;
     // prepare merge sort -> sort vector small_data
-    sort(small_data,small_data+small_data.size(),compare);
 
+    sort(small_data.begin(),small_data.end(),compare);
+    /*
+        cout<<"**************************************"<<endl;
+        for (int i=0 ; i<small_data.size() ; i++)
+        {
+            cout<<small_data[i]<<endl;
+        }
+        cout<<"**************************************"<<endl;
+    */
     //merge sort small_data and OutputFileName
-    data.open(OutputFileName,ios::in |ios::trunc);
-    merge_result.open("current_data.txt",ios::out |ios::trunc);
+    data_.open(OutputFileName,ios::in );
+    merge_result.open("current_data.txt",ios::out|ios::trunc );
     int first = 0;
     int last =small_data.size()-1;
-    while (data>>st)
+    while (data_>>word)
     {
-        while (first <= last && lexicographical_compare(st,small_data[first]))
+        while (first <= last && compare(word,small_data[first]))
         {
-            merge_result<<small_data[first];
+            merge_result<<word<<endl;
             first++;
         }
-        merge_result<<st<<endl;
+        merge_result<<small_data[first]<<endl;
     }
-    data.close();
+
     if (first < last) while (first < last )   merge_result<<small_data[first++];
+
+    data_.close();
     merge_result.close();
-    data.close();
-    data.open(OutputFileName,ios::out |ios::trunc);
-    merge_result.open("current_data.txt",ios:: in |ios::trunc);
-    while(merge_result>>st)
+
+    data_.open(OutputFileName,ios::out |ios::trunc);
+    merge_result.open("current_data.txt",ios::in );
+   // cout<<"**************************************"<<endl;
+    while(merge_result>>word)
     {
-        data<<st<<endl;
+     //   cout<<st<<endl;
+        data_<<word<<endl;
     }
-    data.close();
+
+   // cout<<"**************************************"<<endl;
+    data_.close();
     merge_result.close();
     // save data from data into OutputFileName
-
 }
 void process(string InputFileName , string OutputFileName , ll Memory_Limit )
 {
-    ifstream  data_file;
+    fstream  data;
     ofstream  small_file, result_file;
     vector<string> get_data;
-    int length_string,number_file=0;
-
-    int sum_memory_in_small_file;
-
+    int length_string,sum_memory_in_small_file = 0;
+    string st;
+    data.open(InputFileName,ios::in );
     while (data>>st)
     {
-
+        cout<<st<<endl;
         length_string = st.length();
 
 
-        if (sum_memory_in_small_file + length_string >  4)
+        if (sum_memory_in_small_file + length_string >  10)
         {
+           // cout<<sum_memory_in_small_file << " "<<length_string<<" "<<get_data.size()<<endl;
+
+           /* cout<<"**************************************"<<endl;
+            for (int i=0 ; i<get_data.size() ; i++)
+            {
+                cout<<get_data[i]<<endl;
+            }
+            cout<<"**************************************"<<endl;*/
             merge_data_into_result_file(get_data,OutputFileName);
             get_data.clear();
             sum_memory_in_small_file = 0;
@@ -89,9 +121,7 @@ void process(string InputFileName , string OutputFileName , ll Memory_Limit )
 int main()
 {
     read_data();
-    process();
-
-
+    process(InputFileName,OutputFileName,Memory_Limit);
 
     return 0;
 }
