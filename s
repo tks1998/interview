@@ -1,6 +1,2 @@
-aa
-aa
-aa
-aa
-aa
-aaaab
+222222
+222222
