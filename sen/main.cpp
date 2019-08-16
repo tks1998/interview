@@ -1,3 +1,11 @@
+/*
+    CREATE BY : TRAN KIM SEN
+    DAY 16/08/2019
+    T12:45 PM
+    RUN PROGRAM:
+        if multiple test case
+        please delete file current_data.txt out
+*/
 #include <bits/stdc++.h>
 #define ll long long
 using namespace std;
@@ -40,6 +48,7 @@ bool compare(string word1 , string word2)
 }
 void merge_data_into_result_file(vector<string> small_data , string OutputFileName)
 {
+     cout<<"********************"<<endl;
     string word;
     fstream data_,merge_result;
     // prepare merge sort -> sort vector small_data
@@ -53,32 +62,20 @@ void merge_data_into_result_file(vector<string> small_data , string OutputFileNa
 
     int first = 0;
     int last =small_data.size()-1;
-    cout<<"********************"<<endl;
-   /* while (data_>>word)
-    {
-        cout<<"lan thu n "<<word<<endl;
-    }
-    cout<<"********************"<<endl;*/
+
+
     while (data_>>word)
     {
-        cout<<"day la tu"<<word<<endl;
         while (first <= last && compare(small_data[first],word))
         {
-           // cout<<"xem "<<first<<" "<<last<<endl;
+
             merge_result<<small_data[first]<<endl;
-
             first++;
-          //  if (first == last ) cout<<"(((( "<<small_data[first]<<endl;
         }
-        if (first <= last )
-        {
-            merge_result<<word<<endl;
-        }
-
-        first++;
+        merge_result<<word<<endl;
     }
 
-    if (first < last) while (first < last )  cout<<small_data[first++]<<endl , merge_result<<small_data[first++]<<endl;
+    if (first < last) while (first <= last ) merge_result<<small_data[first++]<<endl;
 
     data_.close();
     merge_result.close();
@@ -93,6 +90,7 @@ void merge_data_into_result_file(vector<string> small_data , string OutputFileNa
 
     data_.close();
     merge_result.close();
+    cout<<"********************"<<endl;
     // save data from data into OutputFileName
 }
 void process(string InputFileName , string OutputFileName , ll Memory_Limit )
