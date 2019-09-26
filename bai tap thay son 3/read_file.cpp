@@ -13,9 +13,9 @@ int main()
         dem++;
         if (dem==121) break;
         float x= rand();
-        x=x/(113);
-        f<<x;
-        cout<<x<<endl;
+        float y = x/113;
+        f<<y<<endl;
+        cout<<y<<endl;
     }
     f.close();
     return 0;

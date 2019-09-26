@@ -21,39 +21,48 @@ void merge_result_result2()
     result.open("EXT.binary",ios::in | ios::binary );
     result2.open("EXT2.binary",ios::in | ios::binary );
     result3.open("EXT3.binary",ios::out | ios::binary );
+
     float x,y;
+    int demc=0;
     while (!result.eof() && !result2.eof())
     {
         result>>x;
         result2>>y;
         if (x>y)
         {
-            result3<<y<<" ";
+            result3<<y<<endl;
             if (!result2.eof()) result2>>y;
         }
         else
         {
-            result3<<x<<" ";
-            result>>x;
+            result3<<x<<endl;
+            if (!result.eof()) result>>x;
         }
     }
-    while(result>>x) result3<<x<<" ";
-    while(result2>>y) result3<<y<<" ";
+    if (!result.eof()) result3<<y<<endl;
+    if (!result2.eof()) result3<<x<<endl;
 
-    result.open("EXT.binary",ios::out | ios::binary | ios::trunc);
+    while(!result.eof()) { result>>x ; result3<<x<<endl;}
+    while(!result2.eof()) {result2>>y ;result3<<y<<endl;}
+
+    result.close();
+    result2.close();
+    result3.close();
+
+    result.open("EXT.binary",ios::out | ios::binary );
     result3.open("EXT3.binary",ios::in | ios::binary);
 
     while (result3>>x)
     {
-        result<<x<<" ";
+        result<<x<<endl;
+        demc++;
     }
+    cout<<"day la size sau khi merge "<<demc<<endl;
     result.close();
-    result2.close();
     result3.close();
 }
 void merge_data(int n)
 {
-    cout<<n<<endl;
     while (!p.empty()) p.pop();
     result2.open("EXT2.binary",ios::out);
     float x;
@@ -66,24 +75,33 @@ void merge_data(int n)
             p.push({i,x});
         }
     }
-    cout<<"trc vao heap "<<p.size()<<endl;
     ii top_heap ;
     int cs;
-    while (!p.empty() && !file[cs].eof())
+    cout<<"toi la size "<<p.size()<<endl;
+    int dem1=0,dem2=0;
+    while (!p.empty() )
     {
         top_heap = p.top();
         p.pop();
-        result2<<top_heap.second<<" ";
+        result2<<top_heap.second<<endl;
         cs = top_heap.first;
-        cout<<cs<<endl;
         if (!file[cs].eof())
         {
             file[cs]>>x;
-            cout<<cs<<" "<<x<<endl;
             p.push(ii(cs,x));
         }
+        dem1++;
     }
-    cout<<"sau heap"<<endl;
+    for (int i=0;i<=n;i++)
+    {
+        while(!file[i].eof())
+        {
+            dem2++;
+                file[i]>>x;
+                result2<<x<<endl;
+        }
+    }
+    cout<<dem1+dem2<<endl;
     for (int i=0;i<=n;i++) file[i].close();
     result2.close();
     merge_result_result2();
@@ -94,7 +112,7 @@ void write_file(vector<float> a ,int k)
     g.open(name[k],ios::out | ios::binary);
     for (int i=0 ; i<a.size(); i++)
     {
-        g<<a[i]<<" ";
+        g<<a[i]<<endl;
     }
     g.close();
 }
@@ -109,7 +127,7 @@ int main()
     cin>>running;
     string st ="";
     //string st = "a";
-    for (int i=1;i<=running;i++)
+    for (int i=0;i<=running;i++)
     {
         st = st + 'b';
         name[i]=st+".binary";
@@ -117,7 +135,8 @@ int main()
 
     float x;
     int k = 0;
-
+    a.clear();
+    int demsize=0;
     while (f>>x)
     {
         if (k>running)
@@ -125,19 +144,28 @@ int main()
             merge_data(running);
             k=0;
         }
-        if (a.size()== maxx)
+        if (a.size()== maxx-1)
         {
             write_file(a,k);
             k++;
+            a.clear();
         }
         a.push_back(x);
+        demsize++;
     }
-    for (int i=0;i<10;i++) cout<<a[i]<<endl;
-    cout<<"toi day"<<endl;
+    f.close();
     write_file(a,k);
-
     merge_data(k);
 
+    cout<<demsize<<endl;
+
+    result.open("EXT.binary",ios::in | ios::binary);
+    int dem=0;
+    while (result>>x)
+    {
+        dem++;
+    }
+    cout<<demsize<<" "<<dem<<endl;
     return 0;
 }
 
